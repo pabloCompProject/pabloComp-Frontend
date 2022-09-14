@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.zxing.integration.android.IntentIntegrator
 import com.pablo.pablo.databinding.ActivityMainBinding
+import com.pablo.pablo.passwd.PassWordActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -15,6 +16,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.button2.setOnClickListener {
+            val intent = Intent(this, PassWordActivity::class.java)
+            startActivity(intent)
+        }
 
         // QR 코드 버튼 이벤트
         binding.button.setOnClickListener {
