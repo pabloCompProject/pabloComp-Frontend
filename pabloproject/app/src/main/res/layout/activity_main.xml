@@ -11,7 +11,7 @@
     <WebView
         android:id="@+id/web_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="562dp"
         android:layout_weight="1">
 
     </WebView>
@@ -22,5 +22,11 @@
         android:layout_height="match_parent"
         android:layout_weight="11"
         android:text="QR 확인" />
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="11"
+        android:text="비번" />
 
 </LinearLayout>
