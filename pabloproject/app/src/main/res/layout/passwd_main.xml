@@ -137,6 +137,10 @@
                     style="@style/PasscodeButtonStyle"
                     android:text="Del" />
             </TableRow>
+
+            <Button
+                android:id="@+id/btnInsert"
+                android:text="확인" />
         </TableLayout>
     </LinearLayout>
 
