@@ -2,18 +2,40 @@ package com.pablo.pablo.passwd
 
 import android.app.admin.DevicePolicyManager
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.pablo.pablo.R
 import com.pablo.pablo.databinding.PasswdMainBinding
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 private lateinit var binding: PasswdMainBinding
 
 class PassWordActivity : AppCompatActivity(){
+
+    var serialNum = ""
+    var tempPw = ""
+    //override fun 에서 this 컨텍스트 사용하기 위한 코드
+    init {
+        instance = this
+    }
+    companion object {
+        lateinit var instance: PassWordActivity
+        fun PassWordActivityContext(): Context {
+            return instance.applicationContext
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +46,17 @@ class PassWordActivity : AppCompatActivity(){
         val buttonArray = arrayListOf<Button>(binding.btn0, binding.btn1, binding.btn2, binding.btn3, binding.btn4, binding.btn5, binding.btn6, binding.btn7, binding.btn8, binding.btn9, binding.btnClear, binding.btnDel)
         for (button in buttonArray){
             button.setOnClickListener(btnListener)
+        }
+
+        //MainActivity 에서 serialNum 받아오기
+        if(intent.hasExtra("serialNum")) {
+            serialNum = intent.getStringExtra("serialNum").toString()
+        }
+
+        //확인 버튼 이벤트
+        binding.btnInsert.setOnClickListener {
+            tempPw = inputedPasswd()
+            selectPwCountPost(serialNum, tempPw)
         }
     }
 
@@ -67,6 +100,35 @@ class PassWordActivity : AppCompatActivity(){
         binding.passcode3.setText("")
         binding.passcode4.setText("")
         binding.passcode1.requestFocus()
+    }
+
+    //retrofit 통신
+    private fun selectPwCountPost(serialNum: String, tempPw: String) {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://3.36.26.8:8080/")
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val service = retrofit.create(PassWordInterface::class.java)
+        val call: Call<String> = service.selectPwCountPost(serialNum, tempPw)
+        call.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if(response.isSuccessful && response.body() != null) {
+                    var result = response.body().toString()
+
+                    if(result.equals("YES")) {  //임시 비밀번호가 맞을 때
+                        Toast.makeText(PassWordActivity.PassWordActivityContext(), "인증 성공", Toast.LENGTH_LONG).show()
+                    }
+                } else {    //임시 비밀번호가 틀렸을 때
+                    Toast.makeText(PassWordActivity.PassWordActivityContext(), "인증 실패", Toast.LENGTH_LONG).show()
+                    Log.d("Reg", "onResponse Failed")
+                }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.d("Reg", "error : " + t.message.toString())
+            }
+        })
     }
 
     //버튼 클릭

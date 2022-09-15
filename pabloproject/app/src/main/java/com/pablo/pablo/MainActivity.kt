@@ -8,9 +8,17 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.zxing.integration.android.IntentIntegrator
 import com.pablo.pablo.databinding.ActivityMainBinding
 import com.pablo.pablo.passwd.PassWordActivity
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private var serialNum = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +61,9 @@ class MainActivity : AppCompatActivity() {
             else {
                 //토스트를 띄운다.
                 Toast.makeText(this, "scanned: " + result.contents, Toast.LENGTH_LONG).show()
+                //serialNum 할당
+                serialNum = result.contents
+                selectSerialCountPost(serialNum)
                 // Log.d("TTT", "QR 코드 URL:${result.contents}")
 
                 //웹뷰 설정 - 필요 X
@@ -66,5 +77,34 @@ class MainActivity : AppCompatActivity() {
         } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
+    }
+
+    private fun selectSerialCountPost(serialNum: String) {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://3.36.26.8:8080/")
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val service = retrofit.create(MainInterface::class.java)
+        val call: Call<String> = service.selectSerialCountPost(serialNum)
+        call.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if(response.isSuccessful && response.body() != null) {
+                    var result = response.body().toString()
+
+                    if(result.equals("YES")) {  //serialNum 이 DB에 있을 때
+                        val intent = Intent(this@MainActivity, PassWordActivity::class.java)
+                        intent.putExtra("serialNum", serialNum)
+                        startActivity(intent)
+                    }
+                } else {    //serialNum 이 DB에 없을 때
+                    Log.d("Reg", "onResponse Failed")
+                }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.d("Reg", "error : " + t.message.toString())
+            }
+        })
     }
 }
