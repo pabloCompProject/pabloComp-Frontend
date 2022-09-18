@@ -1,5 +1,6 @@
 package com.pablo.pablo.passwd
 
+import android.app.Activity
 import android.app.admin.DevicePolicyManager
 import android.content.Context
 import android.content.Intent
@@ -43,7 +44,7 @@ class PassWordActivity : AppCompatActivity(){
 
         setContentView(binding.root)
 
-        val buttonArray = arrayListOf<Button>(binding.btn0, binding.btn1, binding.btn2, binding.btn3, binding.btn4, binding.btn5, binding.btn6, binding.btn7, binding.btn8, binding.btn9, binding.btnClear, binding.btnDel)
+        val buttonArray = arrayListOf<Button>(binding.btn0, binding.btn1, binding.btn2, binding.btn3, binding.btn4, binding.btn5, binding.btn6, binding.btn7, binding.btn8, binding.btn9, binding.btnDel)
         for (button in buttonArray){
             button.setOnClickListener(btnListener)
         }
@@ -57,6 +58,7 @@ class PassWordActivity : AppCompatActivity(){
         binding.btnInsert.setOnClickListener {
             tempPw = inputedPasswd()
             selectPwCountPost(serialNum, tempPw)
+            Log.d("code -------", tempPw)
         }
     }
 
@@ -145,14 +147,8 @@ class PassWordActivity : AppCompatActivity(){
             R.id.btn7 -> currentValue = 7
             R.id.btn8 -> currentValue = 8
             R.id.btn9 -> currentValue = 9
-            R.id.btnClear -> onClear()
             R.id.btnDel -> onDeleteKey()
     }
-
-        fun View.hideKeyboard() {
-            val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(windowToken, 0)
-        }
 
     val strCurrentValue = currentValue.toString() //비번 전체 String으로
     if (currentValue != -1) {
@@ -171,9 +167,4 @@ class PassWordActivity : AppCompatActivity(){
             }
         }
     }
-
-    /*// 비밀번호 모두 입력시
-    if (Passcode1.text.isNotEmpty() && etPasscode2.text.isNotEmpty() && etPasscode3.text.isNotEmpty() && etPasscode4.text.isNotEmpty()) {
-        inputType(intent.getIntExtra("type", 0))
-    }*/
 }
