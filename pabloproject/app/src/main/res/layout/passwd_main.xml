@@ -13,7 +13,7 @@
         android:gravity="center"
         android:orientation="vertical"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp" >
+        android:paddingRight="16dp">
 
         <TextView
             android:id="@+id/tv_message"
@@ -120,12 +120,12 @@
             <TableRow>
 
                 <Button
-                    android:id="@+id/btnClear"
+                    android:id="@+id/btnInsert"
                     style="@style/PasscodeButtonStyle"
                     android:clickable="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:text="Clear" />
+                    android:text="확인" />
 
                 <Button
                     android:id="@+id/btn0"
@@ -137,10 +137,6 @@
                     style="@style/PasscodeButtonStyle"
                     android:text="Del" />
             </TableRow>
-
-            <Button
-                android:id="@+id/btnInsert"
-                android:text="확인" />
         </TableLayout>
     </LinearLayout>
 

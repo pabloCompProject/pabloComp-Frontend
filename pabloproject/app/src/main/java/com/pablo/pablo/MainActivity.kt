@@ -8,7 +8,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.zxing.integration.android.IntentIntegrator
 import com.pablo.pablo.databinding.ActivityMainBinding
 import com.pablo.pablo.passwd.PassWordActivity
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,10 +32,10 @@ class MainActivity : AppCompatActivity() {
         // QR 코드 버튼 이벤트
         binding.button.setOnClickListener {
 
-            val integrator  = IntentIntegrator(this)
-            integrator.setOrientationLocked(false); // default가 세로모드인데 휴대폰 방향에 따라 가로, 세로로 자동 변경됩니다.
+            val integrator = IntentIntegrator(this)
+            integrator.setCameraId(1) // 0은 후면, 1은 전면
+            integrator.setOrientationLocked(false); //세로
             integrator.setBeepEnabled(false)
-            integrator.setOrientationLocked(true)
             integrator.setPrompt("QR코드를 인증해주세요.")
             integrator.initiateScan()
 
