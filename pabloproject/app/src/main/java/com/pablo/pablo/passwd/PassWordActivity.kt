@@ -120,6 +120,8 @@ class PassWordActivity : AppCompatActivity(){
 
                     if(result.equals("YES")) {  //임시 비밀번호가 맞을 때
                         Toast.makeText(PassWordActivity.PassWordActivityContext(), "인증 성공", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(PassWordActivity.PassWordActivityContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_LONG).show()
                     }
                 } else {    //임시 비밀번호가 틀렸을 때
                     Toast.makeText(PassWordActivity.PassWordActivityContext(), "인증 실패", Toast.LENGTH_LONG).show()
