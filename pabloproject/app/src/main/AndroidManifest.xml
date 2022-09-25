@@ -41,10 +41,14 @@
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" />
 
+        <activity android:name=".lock.LockActivity"></activity>
+        
         <activity android:name=".passwd.PassWordActivity"
             android:windowSoftInputMode="stateAlwaysHidden">
 
         </activity>
+
+
     </application>
 
 </manifest>

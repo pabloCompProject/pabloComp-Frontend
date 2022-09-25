@@ -3,6 +3,7 @@ package com.pablo.pablo.bluetooth
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothSocket
 import android.os.SystemClock
+import android.util.Log
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -64,7 +65,8 @@ class ConnectedThread(socket: BluetoothSocket) : Thread() {
     fun cancel() {
         try {
             mmSocket!!.close()
-        } catch (e: IOException) {
+        } catch (e: Exception) {
+            Log.d("bluetooth : " , "close failed")
         }
     }
 }
