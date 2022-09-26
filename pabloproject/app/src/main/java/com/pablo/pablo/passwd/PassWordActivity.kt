@@ -221,6 +221,43 @@ class PassWordActivity : AppCompatActivity(){
     //비번 합치기
     private fun inputedPasswd():String {
         return "${binding.passcode1.text}${binding.passcode2.text}${binding.passcode3.text}${binding.passcode4.text}"}
+
+    //retrofit 통신
+    private fun selectPwCountPost(serialNum: String, tempPw: String, connectedThread: ConnectedThread) {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://3.36.26.8:8080/")
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val service = retrofit.create(PassWordInterface::class.java)
+        val call: Call<String> = service.selectPwCountPost(serialNum, tempPw)
+        call.enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if(response.isSuccessful && response.body() != null) {
+                    var result = response.body().toString()
+
+                    if(result.equals("YES")) {  //임시 비밀번호가 맞을 때
+                        Toast.makeText(PassWordActivity.PassWordActivityContext(), "인증 성공", Toast.LENGTH_LONG).show()
+                        if(connectedThread != null) {
+                            connectedThread!!.write("YES");
+                        }
+                    } else {
+                        Toast.makeText(PassWordActivity.PassWordActivityContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_LONG).show()
+                        if(connectedThread != null) {
+                            connectedThread!!.write("NO");
+                        }
+                    }
+                } else {    //임시 비밀번호가 틀렸을 때
+                    Toast.makeText(PassWordActivity.PassWordActivityContext(), "인증 실패", Toast.LENGTH_LONG).show()
+                    Log.d("Reg", "onResponse Failed")
+                }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.d("Reg", "error : " + t.message.toString())
+            }
+        })
+    }
 }
 
 //edit text
@@ -258,43 +295,6 @@ private fun onClear() {
     binding.passcode3.setText("")
     binding.passcode4.setText("")
     binding.passcode1.requestFocus()
-}
-
-//retrofit 통신
-private fun selectPwCountPost(serialNum: String, tempPw: String, connectedThread: ConnectedThread) {
-    val retrofit = Retrofit.Builder()
-        .baseUrl("http://3.36.26.8:8080/")
-        .addConverterFactory(ScalarsConverterFactory.create())
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-    val service = retrofit.create(PassWordInterface::class.java)
-    val call: Call<String> = service.selectPwCountPost(serialNum, tempPw)
-    call.enqueue(object : Callback<String> {
-        override fun onResponse(call: Call<String>, response: Response<String>) {
-            if(response.isSuccessful && response.body() != null) {
-                var result = response.body().toString()
-
-                if(result.equals("YES")) {  //임시 비밀번호가 맞을 때
-                    Toast.makeText(PassWordActivity.PassWordActivityContext(), "인증 성공", Toast.LENGTH_LONG).show()
-                    if(connectedThread != null) {
-                        connectedThread!!.write("YES");
-                    }
-                } else {
-                    Toast.makeText(PassWordActivity.PassWordActivityContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_LONG).show()
-                    if(connectedThread != null) {
-                        connectedThread!!.write("NO");
-                    }
-                }
-            } else {    //임시 비밀번호가 틀렸을 때
-                Toast.makeText(PassWordActivity.PassWordActivityContext(), "인증 실패", Toast.LENGTH_LONG).show()
-                Log.d("Reg", "onResponse Failed")
-            }
-        }
-
-        override fun onFailure(call: Call<String>, t: Throwable) {
-            Log.d("Reg", "error : " + t.message.toString())
-        }
-    })
 }
 
 //버튼 클릭
