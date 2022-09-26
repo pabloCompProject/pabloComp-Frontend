@@ -243,9 +243,6 @@ class PassWordActivity : AppCompatActivity(){
                         }
                     } else {
                         Toast.makeText(PassWordActivity.PassWordActivityContext(), "비밀번호가 일치하지 않습니다.", Toast.LENGTH_LONG).show()
-                        if(connectedThread != null) {
-                            connectedThread!!.write("NO");
-                        }
                     }
                 } else {    //임시 비밀번호가 틀렸을 때
                     Toast.makeText(PassWordActivity.PassWordActivityContext(), "인증 실패", Toast.LENGTH_LONG).show()
