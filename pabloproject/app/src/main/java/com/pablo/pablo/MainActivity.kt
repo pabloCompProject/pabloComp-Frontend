@@ -24,11 +24,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.button2.setOnClickListener {
-            val intent = Intent(this, PassWordActivity::class.java)
-            startActivity(intent)
-        }
-
         // QR 코드 버튼 이벤트
         binding.button.setOnClickListener {
 
@@ -63,14 +58,6 @@ class MainActivity : AppCompatActivity() {
                 //serialNum 할당
                 serialNum = result.contents
                 selectSerialCountPost(serialNum)
-                // Log.d("TTT", "QR 코드 URL:${result.contents}")
-
-                //웹뷰 설정 - 필요 X
-                // binding.webView.settings.javaScriptEnabled = true
-                // binding.webView.webViewClient = WebViewClient()
-
-                //웹뷰를 띄운다. - 필요 X
-                // binding.webView.loadUrl(result.contents)
             }
             // 결과가 없으면
         } else {
