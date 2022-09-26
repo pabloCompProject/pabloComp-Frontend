@@ -230,7 +230,7 @@ private fun setEditText(currentEditText: EditText, nextEditText: EditText, strCu
     nextEditText.setText("")
 }
 
-//한 칸 지우기 -> 마지막 부분 제대로 안지워짐.
+//한 칸 지우기
 private fun onDeleteKey() {
     when {
         binding.passcode1.isFocused -> {
